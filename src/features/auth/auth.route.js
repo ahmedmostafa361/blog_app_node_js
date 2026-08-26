@@ -1,9 +1,10 @@
 const { Router } = require('express');
 const authRouter = Router();
-authRouter.post('/register');
-authRouter.post('/login');
-authRouter.post('/logout');
-authRouter.post('/send-otp');
-authRouter.post('/verify-otp');
-authRouter.post('/reset-password');
+const authController = require('./auth.controller');
+authRouter.post('/register', authController.registerController);
+authRouter.post('/login', authController.loginController);
+// authRouter.post('/logout', authController.logoutController);
+// authRouter.post('/send-otp', authController.sendOTPController);
+// authRouter.post('/verify-otp', authController.verifyOTPController);
+// authRouter.post('/reset-password',authController.resetPasswordController);
 module.exports = authRouter;
