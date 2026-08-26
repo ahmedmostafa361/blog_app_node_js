@@ -1,5 +1,4 @@
  const authService = require("./auth.service");
- const {createUser} = require("./auth.repository");
 const registerController = async (req, res,next) => {
     try {
         /// handle request service

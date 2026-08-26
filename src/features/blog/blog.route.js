@@ -1,8 +1,12 @@
 const { Router } = require('express');
+const { blogController } = require("./blog.controller");
+const authenticate = require("../../common/middlewares/authenticate");
 const blogRouter = Router();
-// /// create blog
-// blogRouter.post('/blog');
-// /// get blog
+
+blogRouter.post('/create', authenticate, blogController); // 👈 middleware runs first
+
+module.exports = blogRouter;
+
 // blogRouter.get('/blog');
 // /// get blog by id
 // blogRouter.get('/blog/:id');
@@ -10,5 +14,3 @@ const blogRouter = Router();
 // blogRouter.put('/blog/:id');
 // /// delete blog
 // blogRouter.delete('/blog/:id');
-
-module.exports = blogRouter;
