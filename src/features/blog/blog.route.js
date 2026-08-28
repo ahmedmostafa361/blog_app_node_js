@@ -1,9 +1,12 @@
 const { Router } = require('express');
-const { blogController } = require("./blog.controller");
+const { updateBlogController,blogController, blogDeleteController, blogRestoreController} = require("./blog.controller");
 const authenticate = require("../../common/middlewares/authenticate");
 const blogRouter = Router();
 
 blogRouter.post('/create', authenticate, blogController); // 👈 middleware runs first
+blogRouter.delete('/:id',authenticate, blogDeleteController);
+blogRouter.patch('/:id',authenticate, blogRestoreController);
+blogRouter.put('/:id',authenticate, updateBlogController);
 
 module.exports = blogRouter;
 

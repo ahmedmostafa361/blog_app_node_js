@@ -6,3 +6,8 @@ CREATE TABLE blogs (
     author_id       INT               NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     created_at      TIMESTAMP         DEFAULT now()
 );
+
+-- version 2 create new column boolean if is_deleted and not null
+ALTER TABLE blogs ADD COLUMN is_deleted BOOLEAN NOT NULL DEFAULT FALSE;
+
+select * from blogs;
