@@ -1,13 +1,18 @@
-const pool = require("../../common/db/db");
+const prisma = require("../../common/db/prisma");
 const findUserById = async (id) => {
-    const {rows} = await pool.query(`
-    SELECT * FROM users WHERE id = ${id}`);
-    return rows[0];
+    try{
+        const user = await prisma.user.findUnique(
+            {where:{id:id}}
+        );
+        return user;
+    }catch (e) {
+            return null;
+    }
+
 };
 /// create function to check user exist granted true or false
 const checkUserExist = async (id) => {
-    const {rows} = await pool.query(`
-    SELECT EXISTS (SELECT 1 FROM users WHERE id = ${id}) AS result;`);
-    return rows[0].result;
+    const user = await findUserById(id);
+    return !!user;
 }
 module.exports = {findUserById,checkUserExist};

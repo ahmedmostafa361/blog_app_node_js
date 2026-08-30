@@ -1,14 +1,16 @@
-const pool = require("../../common/db/db");
-const {updateBlogRepository,checkBlogExistsById,deleteBlogRepository, restoreBlogRepository} = require("./blog.repository");
+const pool = require("../../common/db/prisma");
+const {updateBlogRepository,checkBlogExistsById,deleteBlogRepository, restoreBlogRepository,
+    HardDeleteBlogRepository
+} = require("./blog.repository");
 const {checkUserExist} = require("../user/user.repository");
 const findUserById = require("../user/user.repository").findUserById;
 const createBlogRepository = require("./blog.repository").createBlogRepository;
 
-const createBlogService = async (title, description, authorId) => {
+const createBlogService = async (title, content, authorId) => {
     const userExist = await findUserById(authorId);
     if (!userExist) throw new Error("User not found");
 
-    const blog = await createBlogRepository(title, description, authorId);
+    const blog = await createBlogRepository(title, content, authorId);
     if (!blog) throw new Error("Failed to create blog");
 
     return blog;
@@ -17,7 +19,15 @@ const createBlogService = async (title, description, authorId) => {
 const deleteBlogService = async (id,authorId) => {
     const userExist = await checkUserExist(authorId);
     if (!userExist) throw new Error("User not found");
-    const blog = await deleteBlogRepository(id,authorId);
+    const blog = await deleteBlogRepository(Number(id),authorId);
+    if (!blog) throw new Error("Failed to delete blog");
+    return blog;
+}
+/// hard delete blog service
+const hardDeleteBlogService = async (id,authorId) => {
+    const userExist = await checkUserExist(authorId);
+    if (!userExist) throw new Error("User not found");
+    const blog = await HardDeleteBlogRepository(Number(id),authorId);
     if (!blog) throw new Error("Failed to delete blog");
     return blog;
 }
@@ -25,7 +35,7 @@ const deleteBlogService = async (id,authorId) => {
 const restoreBlogService = async (id,authorId) => {
     const userExist = await checkUserExist(authorId);
     if (!userExist) throw new Error("User not found");
-    const blog = await restoreBlogRepository(id,authorId);
+    const blog = await restoreBlogRepository(Number(id),authorId);
     if (!blog) throw new Error("Failed to restore blog");
     return blog;
 }
@@ -41,4 +51,4 @@ const updateBlogService = async (id,newData, authorId) => {
     return updatedUser;
 
 }
-module.exports = { createBlogService,deleteBlogService,restoreBlogService,updateBlogService };
+module.exports = { createBlogService,deleteBlogService,restoreBlogService,updateBlogService,hardDeleteBlogService };

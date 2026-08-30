@@ -1,16 +1,15 @@
-const pool = require("../../common/db/db.js");
+const prisma = require("../../common/db/prisma.js");
 const findUserByEmail = async (email) => {
-    const {rows} = await pool.query(
-        "SELECT * FROM users WHERE email = $1",
-        [email]
-    );
-    return rows[0];
+   const user = await prisma.user.findUnique({where:{email}});
+   return user;
 }
 const createUser = async(email,name,hashPassword) => {
-   const {rows}= await pool.query(
-        "INSERT INTO users (email,name,password) VALUES ($1,$2,$3) RETURNING * ",
-        [email,name,hashPassword]
-    );
-   return rows[0];
+    const createdUser = await prisma.user.create({
+        data:{email:email,name:name,password:hashPassword
+        },
+        omit: {password:true}
+    });
+
+    return createdUser;
 }
 module.exports = {findUserByEmail,createUser}

@@ -2,7 +2,7 @@ const express = require('express');
 const config = require('dotenv').config();
 const app = express();
 app.use(express.json());
-const pool = require('./common/db/db');
+const pool = require('./common/db/prisma');
 
 const authRouter = require("./features/auth/auth.route");
 const blogRouter = require("./features/blog/blog.route");

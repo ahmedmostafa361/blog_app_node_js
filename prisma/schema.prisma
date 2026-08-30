@@ -5,10 +5,33 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+// create table of users using prisma
+model User {
+  id        Int @id @default(autoincrement())
+  email     String @unique @db.VarChar(250)
+  password  String @map("password_hash")
+  name      String?
+  createdAt DateTime @default(now()) @map("created_at")
+  blogs     Blog[]
+  @@map("users")
+}
+
+// create table of blogs using prisma
+model Blog {
+  id        Int @id @default(autoincrement())
+  title     String
+  content   String
+  createdAt DateTime @default(now()) @map("created_at")
+  isDeleted Boolean  @default(false) @map("is_deleted")
+  authorId  Int
+  author    User @relation(fields: [authorId], references: [id] , onDelete: Cascade)  /// virtual field
+  @@map("blogs")
 }
